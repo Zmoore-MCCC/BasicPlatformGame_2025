@@ -27,7 +27,7 @@ public class CollectableController : MonoBehaviour
         float minSpeed = 5;
         float maxSpeed = 8;
 
-        speed = Random.Range(minSpeed, maxSpeed);
+        speed = Random.Range(minSpeed, maxSpeed); 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

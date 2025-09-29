@@ -54,7 +54,7 @@ public class PlatformController : MonoBehaviour
         }
         else if(collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.transform.SetParent(gameObject.transform);
+            collision.gameObject.transform.SetParent(gameObject.transform); 
         }
     }
 

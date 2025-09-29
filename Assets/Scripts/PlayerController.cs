@@ -13,15 +13,23 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
 
     public GameObject doubleJumpHatLocation;
+    public GameObject scoreManager;
+    private ScoreManagerGUI scoreManagerScript;
+
+    private static int playerScore;
+    private static int highScore;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //I can only get this component becuase the rigidbody2d is attached to the player
         //this script is also attached to the player
         rb = GetComponent<Rigidbody2D>();
+        scoreManagerScript = scoreManager.GetComponent<ScoreManagerGUI>();
 
         maxNumJumps = 1;
         numJumps = 1;
+
+        playerScore = 0;
     }
 
     // Update is called once per frame
@@ -29,6 +37,8 @@ public class PlayerController : MonoBehaviour
     {
         movePlayerLateral();
         jump();
+        Debug.Log("High: " + highScore);
+
     }
 
     private void movePlayerLateral()
@@ -93,12 +103,54 @@ public class PlayerController : MonoBehaviour
             equipDoubleJumpHat(hat);
             maxNumJumps = 2;
         }
+        else if(collision.gameObject.CompareTag("Collectable"))
+        {
+            //getting reference to the value of the collectable
+            GameObject collectable = collision.gameObject;
+            CollectableData cdScript = collectable.GetComponent<CollectableData>();
+            //getting value of collectable
+            int valueOfCollectable = cdScript.getCollectableValue();
+            //destroy the collectable that we collided with
+            cdScript.destroyCollectable();
+            //changing the players score
+            changePlayerScore(valueOfCollectable);
+            //changing the GUI to match the new score
+            scoreManagerScript.setGUICurScore();
+
+            Debug.Log("High: " + highScore);
+        }
     }
 
     private void equipDoubleJumpHat(GameObject hat)
     {
         hat.transform.position = doubleJumpHatLocation.transform.position;
         hat.gameObject.transform.SetParent(this.gameObject.transform);
+    }
+
+    public int getPlayerScore()
+    {
+        return playerScore;
+    }
+
+    public void setPlayerScore(int s)
+    {
+        playerScore = s;
+    }
+
+    public int getPlayerHighScore()
+    {
+        return highScore;
+    }
+
+    public void setPlayerHighScore(int s)
+    {
+        highScore = s;
+    }
+
+    public void changePlayerScore(int value)
+    {
+        playerScore += value;
+        Debug.Log("Score: " + playerScore);
     }
 }   
 
